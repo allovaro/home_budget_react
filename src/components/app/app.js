@@ -6,6 +6,7 @@ import CkService from '../../services/ckService';
 import './app.css';
 
 import BudgetConfig from '../budgetConfig/budgetConfig';
+import PieRechartComponent from '../pieRechartComponent/pieRechartComponent';
 
 export default class App extends Component {
     coinkeeper = new CkService();
@@ -19,7 +20,36 @@ export default class App extends Component {
         calcLife: 0,
         calcLoans: 0,
         config: {},
+        pieData: [
+            {
+                name: 'Базовые',
+                value: 68.85,
+            },
+            {
+                name: 'Лайфстайл',
+                value: 7.91,
+            },
+            {
+                name: 'Долги',
+                value: 6.85,
+            },
+        ],
     }
+
+    pieData = [
+        {
+            name: 'Базовые',
+            value: 68.85,
+        },
+        {
+            name: 'Лайфстайл',
+            value: 7.91,
+        },
+        {
+            name: 'Долги',
+            value: 6.85,
+        },
+    ];
 
     budgetChanged = data => {
         this.setState({ config: data });
@@ -60,7 +90,21 @@ export default class App extends Component {
         this.setState({
             calcBase: retVal.base.toFixed(2),
             calcLife: retVal.lifestyle.toFixed(2),
-            calcLoans: retVal.loans,
+            calcLoans: retVal.loans.toFixed(2),
+            pieData: [
+                {
+                    name: 'Базовые 12%',
+                    value: retVal.baseAver,
+                },
+                {
+                    name: 'Лайфстайл 78%',
+                    value: retVal.lifestyleAver,
+                },
+                {
+                    name: 'Долги',
+                    value: retVal.loansAver,
+                },
+            ],
         });
         console.log(retVal);
     }
@@ -167,6 +211,7 @@ export default class App extends Component {
                                     <Statistic.Value>{this.state.calcLoans}</Statistic.Value>
                                     <Statistic.Label>Накопления/Долги</Statistic.Label>
                                 </Statistic>
+                                <PieRechartComponent pieData={this.state.pieData} />
                             </Segment>
                         </Grid.Column>
                         <Grid.Column width={2} />

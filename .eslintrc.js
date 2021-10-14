@@ -49,5 +49,7 @@ module.exports = {
         'react/jsx-indent-props': ['error', 4],
         'react/state-in-constructor': 'off',
         'dot-notation': 'off',
+        'react/no-array-index-key': 'warn',
+        'jsx-a11y/label-has-associated-control': 'warn',
     },
 };
