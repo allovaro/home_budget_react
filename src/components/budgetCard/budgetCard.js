@@ -111,7 +111,6 @@ export default class BudgetCard extends Component {
                 ...accounts2020.categories,
                 ...accounts2021.categories])];
             this.setState({ accountList: newVal });
-            console.log(accounts2018);
         } catch (error) {
             this.onError();
         }

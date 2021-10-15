@@ -6,7 +6,7 @@ import CkService from '../../services/ckService';
 import './app.css';
 
 import BudgetConfig from '../budgetConfig/budgetConfig';
-import PieRechartComponent from '../pieRechartComponent/pieRechartComponent';
+import StatsCard from '../statsCard/statsCard';
 
 export default class App extends Component {
     coinkeeper = new CkService();
@@ -16,40 +16,14 @@ export default class App extends Component {
         showLife: false,
         showSave: false,
         showLoans: false,
+        showStatistic: false,
+        result: [],
         calcBase: 0,
         calcLife: 0,
         calcLoans: 0,
         config: {},
-        pieData: [
-            {
-                name: 'Базовые',
-                value: 68.85,
-            },
-            {
-                name: 'Лайфстайл',
-                value: 7.91,
-            },
-            {
-                name: 'Долги',
-                value: 6.85,
-            },
-        ],
+        years: [],
     }
-
-    pieData = [
-        {
-            name: 'Базовые',
-            value: 68.85,
-        },
-        {
-            name: 'Лайфстайл',
-            value: 7.91,
-        },
-        {
-            name: 'Долги',
-            value: 6.85,
-        },
-    ];
 
     budgetChanged = data => {
         this.setState({ config: data });
@@ -67,11 +41,40 @@ export default class App extends Component {
         }
     }
 
+    onYearClick = event => {
+        const year = event.target.id;
+        this.setState(prevState => {
+            let arr = prevState.years;
+            if (arr.indexOf(year) !== -1) {
+                arr = arr.filter(item => (item !== year)).sort();
+            } else {
+                arr.push(year);
+                arr = arr.sort();
+            }
+
+            return ({ years: [...new Set([...arr])] });
+        });
+    }
+
     onCalc = async () => {
+        const resultArr = [];
+        this.state.years.map(async year => {
+            const json = this.prepareJsonRequest(year);
+            const ret = await this.coinkeeper.postRequest('get_statistics', json);
+            resultArr.push(ret);
+        });
+        await this.setState({
+            result: resultArr,
+            showStatistic: true,
+        });
+        console.log(this.state.result);
+    }
+
+    prepareJsonRequest(year) {
         const jsonData = {
             date: {
                 month: 0,
-                year: 2021,
+                year: parseInt(year, 10),
             },
         };
         if (this.state.config.base) {
@@ -86,27 +89,7 @@ export default class App extends Component {
         if (this.state.config.loans) {
             jsonData['loans'] = this.state.config.loans;
         }
-        const retVal = await this.coinkeeper.postRequest('get_statistics', jsonData);
-        this.setState({
-            calcBase: retVal.base.toFixed(2),
-            calcLife: retVal.lifestyle.toFixed(2),
-            calcLoans: retVal.loans.toFixed(2),
-            pieData: [
-                {
-                    name: 'Базовые 12%',
-                    value: retVal.baseAver,
-                },
-                {
-                    name: 'Лайфстайл 78%',
-                    value: retVal.lifestyleAver,
-                },
-                {
-                    name: 'Долги',
-                    value: retVal.loansAver,
-                },
-            ],
-        });
-        console.log(retVal);
+        return jsonData;
     }
 
     render() {
@@ -129,6 +112,8 @@ export default class App extends Component {
                 </Placeholder.Paragraph>
             </Placeholder>
         );
+
+        const statistic = this.state.showStatistic ? <StatsCard data={this.state.result} /> : null;
 
         return (
             <div className="App">
@@ -181,6 +166,38 @@ export default class App extends Component {
                                             <Button id="calc" onClick={this.onCalc}>
                                                 Посчитать
                                             </Button>
+                                            <Button
+                                                id="2018"
+                                                toggle
+                                                active={this.state.years.indexOf('2018') !== -1}
+                                                onClick={this.onYearClick}
+                                            >
+                                                2018
+                                            </Button>
+                                            <Button
+                                                id="2019"
+                                                toggle
+                                                active={this.state.years.indexOf('2019') !== -1}
+                                                onClick={this.onYearClick}
+                                            >
+                                                2019
+                                            </Button>
+                                            <Button
+                                                id="2020"
+                                                toggle
+                                                active={this.state.years.indexOf('2020') !== -1}
+                                                onClick={this.onYearClick}
+                                            >
+                                                2020
+                                            </Button>
+                                            <Button
+                                                id="2021"
+                                                toggle
+                                                active={this.state.years.indexOf('2021') !== -1}
+                                                onClick={this.onYearClick}
+                                            >
+                                                2021
+                                            </Button>
                                         </Grid.Column>
                                         <Grid.Column>
 
@@ -211,7 +228,7 @@ export default class App extends Component {
                                     <Statistic.Value>{this.state.calcLoans}</Statistic.Value>
                                     <Statistic.Label>Накопления/Долги</Statistic.Label>
                                 </Statistic>
-                                <PieRechartComponent pieData={this.state.pieData} />
+                                {statistic}
                             </Segment>
                         </Grid.Column>
                         <Grid.Column width={2} />
