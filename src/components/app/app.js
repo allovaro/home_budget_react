@@ -14,10 +14,7 @@ export default class App extends Component {
     state = {
         showStatistic: false,
         result: [],
-        calcBase: 0,
-        calcLife: 0,
-        calcLoans: 0,
-    }
+    };
 
     onStatsChanged = result => {
         this.setState({
@@ -47,8 +44,6 @@ export default class App extends Component {
             </Placeholder>
         );
 
-        const statistic = this.state.showStatistic ? <StatsCard data={this.state.result} /> : null;
-
         return (
             <div className="App">
                 <Grid>
@@ -58,22 +53,10 @@ export default class App extends Component {
                             <ConfigCard onValueChanged={this.onStatsChanged} />
                         </Grid.Column>
                         <Grid.Column width={6}>
-                            <Segment raised>
-                                <Header as="h1">Результаты</Header>
-                                <Statistic>
-                                    <Statistic.Value>{this.state.calcBase}</Statistic.Value>
-                                    <Statistic.Label>Базовые</Statistic.Label>
-                                </Statistic>
-                                <Statistic>
-                                    <Statistic.Value>{this.state.calcLife}</Statistic.Value>
-                                    <Statistic.Label>Лайфстайл</Statistic.Label>
-                                </Statistic>
-                                <Statistic>
-                                    <Statistic.Value>{this.state.calcLoans}</Statistic.Value>
-                                    <Statistic.Label>Накопления/Долги</Statistic.Label>
-                                </Statistic>
-                                {statistic}
-                            </Segment>
+                            <StatsCard
+                                visible={this.state.showStatistic}
+                                data={this.state.result}
+                            />
                         </Grid.Column>
                         <Grid.Column width={2} />
                     </Grid.Row>

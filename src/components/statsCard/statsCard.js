@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Header } from 'semantic-ui-react';
+import {
+    Button, Header, Segment, Grid, Statistic, Icon,
+} from 'semantic-ui-react';
 import PieRechartComponent from '../pieRechartComponent/pieRechartComponent';
 import ErrorMessage from '../errorMessage/errorMessage';
 
@@ -7,8 +9,7 @@ export default class StatsCard extends Component {
     state = {
         current: 0,
         error: false,
-        result: [],
-    }
+    };
 
     componentDidCatch() {
         this.setState({
@@ -37,42 +38,100 @@ export default class StatsCard extends Component {
     }
 
     render() {
+        const dataPie = [];
         const { current, error } = this.state;
         const { data } = this.props;
-        console.log(this.props.data, data.length);
-        if (data) {
-            return <></>;
+
+        if (!this.props.visible) {
+            return null;
         }
 
-        const dataPie = [
-            {
+        if (!data) {
+            return <ErrorMessage />;
+        }
+
+        if (data[current].baseAver) {
+            dataPie.push({
                 name: 'Базовые',
                 value: data[current].baseAver,
-            },
-            {
+            });
+        }
+        if (data[current].lifestyleAver) {
+            dataPie.push({
                 name: 'Лайфстайл',
                 value: data[current].lifestyleAver,
-            },
-            {
+            });
+        }
+        if (data[current].loansAver) {
+            dataPie.push({
                 name: 'Долги',
                 value: data[current].loansAver,
-            },
-            {
+            });
+        }
+        if (data[current].savingsAver) {
+            dataPie.push({
                 name: 'Накопления',
                 value: data[current].savingsAver,
-            },
-        ];
+            });
+        }
 
         const errorMessage = error ? <ErrorMessage /> : null;
 
         return (
-            <>
+            <Segment raised>
                 {errorMessage}
-                <Header as="h2">{data[current].year}</Header>
-                <Button onClick={this.onMinus}>-</Button>
-                <Button onClick={this.onAdd}>+</Button>
-                <PieRechartComponent pieData={dataPie} />
-            </>
+                <Grid columns={1} centered>
+                    <Grid.Row>
+                        <Statistic.Group>
+                            <Statistic color="red">
+                                <Statistic.Value>
+                                    {data[current].base.toFixed(0)}
+                                </Statistic.Value>
+                                <Statistic.Label>Базовые</Statistic.Label>
+                            </Statistic>
+                            <Statistic color="orange">
+                                <Statistic.Value>
+                                    {data[current].lifestyle.toFixed(0)}
+                                </Statistic.Value>
+                                <Statistic.Label>Лайфстайл</Statistic.Label>
+                            </Statistic>
+                            <Statistic color="orange">
+                                <Statistic.Value>
+                                    {data[current].loans.toFixed(0)}
+                                </Statistic.Value>
+                                <Statistic.Label>Долги</Statistic.Label>
+                            </Statistic>
+                        </Statistic.Group>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Button icon basic size="medium" color="teal" onClick={this.onMinus}>
+                            <Icon name="angle left" />
+                        </Button>
+                        <Header as="h2">{data[current].year}</Header>
+                        <Button icon basic color="teal" onClick={this.onAdd}>
+                            <Icon name="angle right" />
+                        </Button>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <PieRechartComponent pieData={dataPie} />
+                    </Grid.Row>
+                </Grid>
+            </Segment>
         );
     }
 }
+
+// Specifies the default values for props:
+StatsCard.defaultProps = {
+    data: [{
+        years: 2018,
+        base: 0,
+        baseAver: 0,
+        lifestyle: 0,
+        lifestyleAver: 0,
+        loans: 0,
+        loansAver: 0,
+        savings: 0,
+        savingsAver: 0,
+    }],
+};

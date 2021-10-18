@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Promise from 'bluebird';
 import {
     Button, Header, Grid, Segment, Icon,
 } from 'semantic-ui-react';
@@ -57,15 +58,26 @@ export default class ConfigCard extends Component {
     }
 
     onCalc = async () => {
-        const resultArr = [];
-        this.state.years.map(async year => {
+        const { years } = this.state;
+        const result = await Promise.map(years, async year => {
             const json = this.prepareJsonRequest(year);
             const ret = await this.coinkeeper.postRequest('get_statistics', json);
-            resultArr.push(ret);
-        });
-        this.props.onValueChanged(resultArr);
-        console.log(this.state.result);
+            return ret;
+        }, { concurrency: 2 });
+        this.props.onValueChanged(result);
     }
+
+    // onCalc = async () => {
+    //     const resultArr = [];
+    //     this.state.years.map(async year => {
+    //         const json = this.prepareJsonRequest(year);
+    //         const ret = await this.coinkeeper.postRequest('get_statistics', json);
+    //         resultArr.push(ret);
+    //     });
+    //     this.setState({ result: resultArr });
+    //     // console.log('ready to send array', resultArr, resultArr[0]);
+    //     // this.props.onValueChanged(resultArr);
+    // }
 
     prepareJsonRequest(year) {
         const jsonData = {

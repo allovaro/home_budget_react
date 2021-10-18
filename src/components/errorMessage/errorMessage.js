@@ -5,8 +5,8 @@ function ErrorMessage() {
     return (
         <Segment>
             <Message negative>
-                <Message.Header>Простите</Message.Header>
-                <p>Что-то пошло не так</p>
+                <Message.Header>Ошибка :(</Message.Header>
+                <p>Простите что-то пошло не так</p>
             </Message>
         </Segment>
     );
