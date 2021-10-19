@@ -7,7 +7,6 @@ import ErrorMessage from '../errorMessage/errorMessage';
 
 export default class StatsCard extends Component {
     state = {
-        current: 0,
         error: false,
     };
 
@@ -17,29 +16,14 @@ export default class StatsCard extends Component {
         });
     }
 
-    onAdd = () => {
-        this.setState(prevState => {
-            const current = prevState.current + 1;
-            if (current >= this.props.data.length) {
-                return { current: 0 };
-            }
-            return { current };
-        });
-    }
+    onAdd = () => (this.props.onCurrent(this.props.current + 1))
 
-    onMinus = () => {
-        this.setState(prevState => {
-            const current = prevState.current - 1;
-            if (current < 0) {
-                return { current: this.props.data.length - 1 };
-            }
-            return { current };
-        });
-    }
+    onMinus = () => (this.props.onCurrent(this.props.current - 1))
 
     render() {
         const dataPie = [];
-        const { current, error } = this.state;
+        const { current } = this.props;
+        const { error } = this.state;
         const { data } = this.props;
 
         if (!this.props.visible) {

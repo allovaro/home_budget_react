@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import {
-    Button, Icon, Grid, Placeholder, Segment, Header, Statistic,
-} from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import CkService from '../../services/ckService';
 import './app.css';
 
 import ConfigCard from '../configCard/configCard';
 import StatsCard from '../statsCard/statsCard';
+import TableCard from '../tableCard/tableCard';
 
 export default class App extends Component {
     coinkeeper = new CkService();
@@ -14,6 +13,7 @@ export default class App extends Component {
     state = {
         showStatistic: false,
         result: [],
+        current: 0,
     };
 
     onStatsChanged = result => {
@@ -23,27 +23,13 @@ export default class App extends Component {
         });
     }
 
-    render() {
-        const FooSpace = () => (
-            <Placeholder>
-                <Placeholder.Header image>
-                    <Placeholder.Line />
-                    <Placeholder.Line />
-                </Placeholder.Header>
-                <Placeholder.Paragraph>
-                    <Placeholder.Line length="medium" />
-                    <Placeholder.Line length="short" />
-                    <Placeholder.Line length="medium" />
-                    <Placeholder.Line length="short" />
-                    <Placeholder.Line length="medium" />
-                    <Placeholder.Line length="short" />
-                    <Placeholder.Line length="medium" />
-                    <Placeholder.Line length="short" />
-                    <Placeholder.Line length="medium" />
-                </Placeholder.Paragraph>
-            </Placeholder>
-        );
+    onCurrentChange = current => {
+        this.setState({
+            current,
+        });
+    }
 
+    render() {
         return (
             <div className="App">
                 <Grid>
@@ -56,22 +42,14 @@ export default class App extends Component {
                             <StatsCard
                                 visible={this.state.showStatistic}
                                 data={this.state.result}
+                                onCurrent={this.onCurrentChange}
+                                current={this.state.current}
                             />
-                        </Grid.Column>
-                        <Grid.Column width={2} />
-                    </Grid.Row>
-
-                    <Grid.Row>
-                        <Grid.Column width={2} />
-                        <Grid.Column width={6}>
-                            <Segment raised>
-                                <FooSpace />
-                            </Segment>
-                        </Grid.Column>
-                        <Grid.Column width={6}>
-                            <Segment raised>
-                                <FooSpace />
-                            </Segment>
+                            <TableCard
+                                visible={this.state.showStatistic}
+                                result={this.state.result}
+                                current={this.state.current}
+                            />
                         </Grid.Column>
                         <Grid.Column width={2} />
                     </Grid.Row>
@@ -80,10 +58,3 @@ export default class App extends Component {
         );
     }
 }
-
-// <div className="App">
-// <h1>Hello world!!!</h1>
-// <Button primary onClick={this.onClick}>GetData</Button>
-// <Button onClick={this.onClick2}>GetData</Button>
-// <TagList tags={this.state.tags} />
-// </div>
