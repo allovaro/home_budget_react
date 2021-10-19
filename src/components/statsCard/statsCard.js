@@ -83,13 +83,13 @@ export default class StatsCard extends Component {
                 <Grid columns={1} centered>
                     <Grid.Row>
                         <Statistic.Group>
-                            <Statistic color="red">
+                            <Statistic color="blue">
                                 <Statistic.Value>
                                     {data[current].base.toFixed(0)}
                                 </Statistic.Value>
                                 <Statistic.Label>Базовые</Statistic.Label>
                             </Statistic>
-                            <Statistic color="orange">
+                            <Statistic color="green">
                                 <Statistic.Value>
                                     {data[current].lifestyle.toFixed(0)}
                                 </Statistic.Value>
@@ -104,12 +104,14 @@ export default class StatsCard extends Component {
                         </Statistic.Group>
                     </Grid.Row>
                     <Grid.Row>
-                        <Button icon basic size="medium" color="teal" onClick={this.onMinus}>
-                            <Icon name="angle left" />
+                        <Button basic size="big" color="teal" icon onClick={this.onMinus}>
+                            <Icon name="chevron left" />
                         </Button>
-                        <Header as="h2">{data[current].year}</Header>
-                        <Button icon basic color="teal" onClick={this.onAdd}>
-                            <Icon name="angle right" />
+                        <div style={{ padding: '20px' }}>
+                            <Header as="h2" color="teal">{data[current].year}</Header>
+                        </div>
+                        <Button basic size="big" color="teal" icon onClick={this.onAdd}>
+                            <Icon name="chevron right" />
                         </Button>
                     </Grid.Row>
                     <Grid.Row>
