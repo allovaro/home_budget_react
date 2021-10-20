@@ -67,18 +67,6 @@ export default class ConfigCard extends Component {
         this.props.onValueChanged(result);
     }
 
-    // onCalc = async () => {
-    //     const resultArr = [];
-    //     this.state.years.map(async year => {
-    //         const json = this.prepareJsonRequest(year);
-    //         const ret = await this.coinkeeper.postRequest('get_statistics', json);
-    //         resultArr.push(ret);
-    //     });
-    //     this.setState({ result: resultArr });
-    //     // console.log('ready to send array', resultArr, resultArr[0]);
-    //     // this.props.onValueChanged(resultArr);
-    // }
-
     prepareJsonRequest(year) {
         const jsonData = {
             date: {

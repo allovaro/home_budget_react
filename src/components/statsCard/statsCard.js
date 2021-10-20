@@ -16,9 +16,21 @@ export default class StatsCard extends Component {
         });
     }
 
-    onAdd = () => (this.props.onCurrent(this.props.current + 1))
+    onAdd = () => {
+        if (this.props.data.length > this.props.current + 1) {
+            this.props.onCurrent(this.props.current + 1);
+        } else {
+            this.props.onCurrent(0);
+        }
+    }
 
-    onMinus = () => (this.props.onCurrent(this.props.current - 1))
+    onMinus = () => {
+        if (this.props.current - 1 >= 0) {
+            this.props.onCurrent(this.props.current - 1);
+        } else {
+            this.props.onCurrent(this.props.data.length - 1);
+        }
+    }
 
     render() {
         const dataPie = [];

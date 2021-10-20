@@ -3,7 +3,6 @@ export default class CkService {
 
     postRequest = async (url, obj) => {
         const body = JSON.stringify(obj);
-        console.log(body);
 
         const res = await fetch(`${this.baseUrl}${url}`, {
             method: 'POST', // или 'PUT'
